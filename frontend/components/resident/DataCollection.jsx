@@ -1,22 +1,25 @@
 'use client';
 import React, { useState } from 'react';
-import { Droplets, Zap, Trash2, Send } from 'lucide-react';
+import { Droplets, Zap, Trash2, Send, Bus } from 'lucide-react';
 
 export default function DataCollection({ onDataSubmit }) {
   const [formData, setFormData] = useState({
     water: '',
     energy: '',
-    waste: 50
+    waste: 50,
+    transportDays: 0 // New state for transport
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("Submitting Resident Data:", formData);
     onDataSubmit(formData);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-lg">
       <div className="grid gap-4">
+        
         {/* Water Input */}
         <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/10 focus-within:border-blue-500/50 transition-all">
           <label className="flex items-center gap-2 text-zinc-400 text-xs font-bold uppercase mb-4">
@@ -47,6 +50,32 @@ export default function DataCollection({ onDataSubmit }) {
           />
         </div>
 
+        {/* Public Transport Days (NEW) */}
+        <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/10 focus-within:border-purple-500/50 transition-all">
+          <label className="flex items-center justify-between text-zinc-400 text-xs font-bold uppercase mb-4">
+            <span className="flex items-center gap-2">
+              <Bus size={14} className="text-purple-400" /> Public Transport (Days/Week)
+            </span>
+            <span className="text-white font-bold">{formData.transportDays} Days</span>
+          </label>
+          <div className="flex justify-between gap-2">
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((day) => (
+              <button
+                key={day}
+                type="button"
+                onClick={() => setFormData({...formData, transportDays: day})}
+                className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all border ${
+                  formData.transportDays === day 
+                  ? 'bg-purple-500 border-purple-400 text-black' 
+                  : 'bg-white/5 border-white/5 text-zinc-500 hover:border-white/20'
+                }`}
+              >
+                {day}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Waste Slider */}
         <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/10">
           <label className="flex items-center justify-between text-zinc-400 text-xs font-bold uppercase mb-4">
@@ -56,7 +85,7 @@ export default function DataCollection({ onDataSubmit }) {
           <input 
             type="range" 
             min="0" max="100"
-            className="w-full accent-emerald-500 cursor-pointer"
+            className="w-all accent-emerald-500 cursor-pointer"
             value={formData.waste}
             onChange={(e) => setFormData({...formData, waste: e.target.value})}
           />
