@@ -1,123 +1,118 @@
 'use client';
 
 import { useState } from 'react';
-import DataCollectionForm from '@/components/DataCollectionForm';
-import ActionPlanDisplay from '@/components/ActionPlanDisplay';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import { Leaf, ArrowLeft } from 'lucide-react';
+import { Leaf, Mail, Lock, User, ArrowRight, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 
-export default function Home() {
-  const [currentView, setCurrentView] = useState('form');
-  const [communityData, setCommunityData] = useState(null);
-  const [actionPlan, setActionPlan] = useState(null);
+export default function AuthForm() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
 
-  const handleFormSubmit = async (data) => {
-    setCommunityData(data);
-    setCurrentView('loading');
-
-    try {
-      const response = await fetch('http://localhost:5000/api/plans/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) throw new Error('Failed to generate action plan');
-
-      const result = await response.json();
-      setActionPlan(result);
-      setCurrentView('results');
-    } catch (error) {
-      console.error('Error generating action plan:', error);
-      alert('Failed to generate action plan. Please ensure the backend server is running.');
-      setCurrentView('form');
-    }
-  };
-
-  const handleStartOver = () => {
-    setCurrentView('form');
-    setCommunityData(null);
-    setActionPlan(null);
-  };
+  const inputClasses = "w-full bg-white/[0.03] border border-white/10 rounded-xl px-11 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-green-500/40 transition-all";
+  const iconClasses = "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500";
 
   return (
-    // Updated Background: Deep Emerald/Cyan theme for EcoMindAI
-    <div className="min-h-screen bg-[#050b0a] text-zinc-100 selection:bg-green-500/30 relative overflow-hidden font-sans">
+    <div className="flex min-h-[80vh] w-full max-w-5xl mx-auto backdrop-blur-xl bg-white/[0.01] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl">
       
-      {/* --- Ambient Glass Background Glows --- */}
-      <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-5%] w-[40%] h-[40%] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
-
-      {/* Header: Floated Glass Card */}
-      <header className="sticky top-4 z-50 mx-auto max-w-7xl px-4">
-        <div className="backdrop-blur-md bg-white/[0.03] border border-white/10 rounded-2xl py-4 px-6 shadow-2xl flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-cyan-500 flex items-center justify-center shadow-lg shadow-green-500/20">
-              <Leaf className="w-5 h-5 text-black" />
+      {/* --- Left Side: Brand/Visual (Hidden on Mobile) --- */}
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-green-600/20 to-cyan-600/10 p-12 flex-col justify-between relative border-r border-white/5">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
+        
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center shadow-lg shadow-green-500/20">
+              <Leaf className="text-black w-6 h-6" />
             </div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-cyan-300">
-                EcoMindAI
-              </h1>
-              <p className="hidden md:block text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-medium">
-                Community Environmental Action Planner
-              </p>
-            </div>
+            <span className="text-xl font-bold tracking-tight text-white">EcoMindAI</span>
           </div>
-
-          {currentView === 'results' && (
-            <button 
-              onClick={handleStartOver} 
-              className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-sm font-medium"
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              Start Over
-            </button>
-          )}
+          <h2 className="text-4xl font-bold text-white leading-tight">
+            The future is <br />
+            <span className="text-green-400 italic">sustainable.</span>
+          </h2>
+          <p className="mt-4 text-zinc-400 font-light max-w-xs leading-relaxed">
+            Join thousands of communities using AI to orchestrate environmental change.
+          </p>
         </div>
-      </header>
 
-      {/* Main content */}
-      <main className="container max-w-5xl mx-auto pt-20 pb-20 px-4 relative z-10">
-        {currentView === 'form' && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-                Create Your Community <br/><span className="text-green-400">Action Plan</span>
-              </h2>
-              <p className="text-lg text-zinc-400 max-w-2xl mx-auto font-light leading-relaxed">
-                Share details about your community. Our AI generates a personalized 
-                environmental plan tailored to your unique resources.
-              </p>
+        <div className="relative z-10 bg-white/[0.03] border border-white/10 p-6 rounded-2xl backdrop-blur-md">
+          <Sparkles className="text-green-400 w-5 h-5 mb-2" />
+          <p className="text-sm text-zinc-300 italic">
+            "We decreased our community carbon footprint by 22% in the first quarter using EcoMindAI."
+          </p>
+          <p className="mt-3 text-xs font-bold text-zinc-500 uppercase tracking-widest">— Riverdale Green Council</p>
+        </div>
+      </div>
+
+      {/* --- Right Side: The Form --- */}
+      <div className="w-full lg:w-1/2 p-8 md:p-16 flex flex-col justify-center bg-[#080e0d]">
+        <div className="max-w-sm mx-auto w-full">
+          <div className="mb-10 text-center lg:text-left">
+            <h3 className="text-3xl font-bold text-white mb-2">
+              {isLogin ? 'Welcome Back' : 'Join the Movement'}
+            </h3>
+            <p className="text-zinc-500 text-sm">
+              {isLogin ? 'Enter your details to access your dashboard.' : 'Start your journey towards a greener community.'}
+            </p>
+          </div>
+
+          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            {!isLogin && (
+              <div className="relative group">
+                <User className={iconClasses} />
+                <input 
+                  type="text" 
+                  placeholder="Full Name" 
+                  className={inputClasses}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                />
+              </div>
+            )}
+
+            <div className="relative group">
+              <Mail className={iconClasses} />
+              <input 
+                type="email" 
+                placeholder="Email Address" 
+                className={inputClasses}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+              />
             </div>
 
-            {/* Form Container: Glassmorphic Box */}
-            <div className="backdrop-blur-xl bg-white/[0.02] border border-white/10 rounded-[2.5rem] p-6 md:p-10 shadow-2xl">
-              <DataCollectionForm onSubmit={handleFormSubmit} />
+            <div className="relative group">
+              <Lock className={iconClasses} />
+              <input 
+                type="password" 
+                placeholder="Password" 
+                className={inputClasses}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+              />
             </div>
-          </div>
-        )}
 
-        {currentView === 'loading' && (
-          <div className="flex flex-col items-center justify-center min-h-[50vh] animate-pulse">
-            <LoadingSpinner />
-            <p className="mt-6 text-zinc-500 tracking-widest text-xs uppercase">Analyzing Ecosystem Data...</p>
-          </div>
-        )}
+            {isLogin && (
+              <div className="text-right">
+                <button className="text-xs text-green-500/80 hover:text-green-400 transition-colors">
+                  Forgot Password?
+                </button>
+              </div>
+            )}
 
-        {currentView === 'results' && actionPlan && (
-          <div className="animate-in fade-in zoom-in-95 duration-500">
-            <ActionPlanDisplay plan={actionPlan} communityData={communityData} />
-          </div>
-        )}
-      </main>
+            <button className="w-full py-4 bg-green-500 hover:bg-green-400 text-black font-bold rounded-xl shadow-lg shadow-green-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-4">
+              {isLogin ? 'Sign In' : 'Create Account'}
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </form>
 
-      {/* Footer */}
-      <footer className="py-12 text-center relative z-10 border-t border-white/5 mx-auto max-w-4xl">
-        <p className="text-xs tracking-widest text-zinc-600 uppercase">
-          © 2026 EcoMindAI | Architectured by API Team
-        </p>
-      </footer>
+          <p className="mt-8 text-center text-sm text-zinc-500">
+            {isLogin ? "Don't have an account?" : "Already a member?"}{' '}
+            <button 
+              onClick={() => setIsLogin(!isLogin)}
+              className="text-green-500 font-bold hover:underline underline-offset-4 transition-all"
+            >
+              {isLogin ? 'Sign Up' : 'Log In'}
+            </button>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
