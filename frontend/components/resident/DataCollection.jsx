@@ -12,7 +12,6 @@ export default function DataCollection({ onDataSubmit }) {
     fuelPoints: 0,
     transportPoints: 0,
     plasticPoints: 0,
-    purchasePoints: 0,
     foodPoints: 0
   });
 
