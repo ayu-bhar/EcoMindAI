@@ -28,18 +28,22 @@ export const AuthProvider = ({ children }) => {
 
   /**
    * googleLogin
-   * @param {Object|null} profileData - Optional. { name, age } from Signup page.
+   * @param {Object|null} profileData - Optional. { name, age, role } from Signup page.
    */
   const googleLogin = async (profileData = null) => {
     const provider = new GoogleAuthProvider();
     try {
+      // 1. Authenticate with Google
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      
+      console.log("Authentication successful for:", user.email);
 
-      // Reference to the user document in Firestore
+      // 2. Prepare Database Reference
       const userRef = doc(db, 'users', user.uid);
 
-      // Basic data we always want to capture/update on login
+      // 3. Prepare User Data Object
+      // Basic info (always update this)
       let userData = {
         uid: user.uid,
         email: user.email,
@@ -47,24 +51,30 @@ export const AuthProvider = ({ children }) => {
         lastLogin: serverTimestamp(),
       };
 
-      // If profileData exists (User came from Signup page), add Name/Age
+      // If we have extra profile data (from Signup), merge it in
       if (profileData) {
+        console.log("Profile Data received:", profileData);
         userData = {
           ...userData,
           name: profileData.name,
           age: profileData.age,
-          createdAt: serverTimestamp(), // Only set this when registering/updating profile
+          role: profileData.role,
+          // Only set createdAt if it doesn't exist (we'll handle this via merge logic below)
+          createdAt: serverTimestamp(),
         };
       }
 
-      // Save to Firestore using merge: true 
-      // This prevents overwriting existing fields if we just do a standard login later
+      // 4. Write to Firestore
+      // { merge: true } ensures we don't overwrite existing fields if we just do a standard login later
       await setDoc(userRef, userData, { merge: true });
+      console.log("Database write successful!");
 
-      router.push('/dashboard');
+      // 5. Redirect to HOME PAGE instead of dashboard
+      router.push('/'); 
+
     } catch (error) {
-      console.error("Auth Error:", error);
-      throw error; // Throw to the page component to handle UI alerts
+      console.error("Authentication failed:", error);
+      throw error; 
     }
   };
 

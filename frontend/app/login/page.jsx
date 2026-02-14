@@ -20,9 +20,8 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     try {
-        await googleLogin(); // No arguments needed for standard login
+        await googleLogin(); // Standard login
     } catch (err) {
-        // Handle error (optional UI feedback)
         console.error("Login failed", err);
     }
   };
@@ -55,6 +54,10 @@ export default function LoginPage() {
               <div className="flex items-start gap-4">
                 <div className="p-2 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400"><ShieldCheck size={20} /></div>
                 <div><h4 className="text-white font-bold text-sm">Encrypted Dashboard</h4><p className="text-zinc-500 text-xs">Your community data is protected with enterprise-grade security.</p></div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"><Zap size={20} /></div>
+                <div><h4 className="text-white font-bold text-sm">Instant Sync</h4><p className="text-zinc-500 text-xs">Access real-time AI modeling across all your devices.</p></div>
               </div>
             </div>
           </div>
