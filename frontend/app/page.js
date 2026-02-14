@@ -1,65 +1,95 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import DataCollectionForm from '@/components/DataCollectionForm';
+import ActionPlanDisplay from '@/components/ActionPlanDisplay';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { Leaf, ArrowLeft } from 'lucide-react';
 
 export default function Home() {
+  const [currentView, setCurrentView] = useState('form');
+  const [communityData, setCommunityData] = useState(null);
+  const [actionPlan, setActionPlan] = useState(null);
+
+  const handleFormSubmit = async (data) => {
+    setCommunityData(data);
+    setCurrentView('loading');
+
+    try {
+      //To impement AI fetch...
+    } catch (error) {
+      console.error('Error generating action plan:', error);
+      alert('Failed to generate action plan. Please ensure the backend server is running.');
+      setCurrentView('form');
+    }
+  };
+
+  const handleStartOver = () => {
+    setCurrentView('form');
+    setCommunityData(null);
+    setActionPlan(null);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen">
+      {/* Header */}
+      <header className="glass-card mx-4 mt-4 mb-8">
+        <div className="container py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-cyan-500 flex items-center justify-center">
+                <Leaf className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold gradient-text">EcoMindAI</h1>
+                <p className="text-sm text-gray-600">Community Environmental Action Planner</p>
+              </div>
+            </div>
+            {currentView === 'results' && (
+              <button onClick={handleStartOver} className="btn btn-secondary">
+                <ArrowLeft className="w-4 h-4" />
+                Start Over
+              </button>
+            )}
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </header>
+
+      {/* Main content */}
+      <main className="container pb-12">
+        {currentView === 'form' && (
+          <div className="fade-in">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold mb-3">Create Your Community Action Plan</h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Share information about your community, and our AI will generate a personalized
+                environmental sustainability plan tailored to your unique needs and resources.
+              </p>
+            </div>
+            <DataCollectionForm onSubmit={handleFormSubmit} />
+          </div>
+        )}
+
+        {currentView === 'loading' && (
+          <div className="fade-in">
+            <LoadingSpinner />
+          </div>
+        )}
+
+        {currentView === 'results' && actionPlan && (
+          <div className="fade-in">
+            <ActionPlanDisplay plan={actionPlan} communityData={communityData} />
+          </div>
+        )}
       </main>
+
+      {/* Footer */}
+      <footer className="container py-8 text-center text-gray-600">
+        <p className="text-sm">
+          © 2026 EcoMindAI | Architectured with LOVE by API team | Built for sustainable communities
+        </p>
+      </footer>
     </div>
   );
 }
+
