@@ -76,13 +76,13 @@ export default function DataCollection({ onDataSubmit }) {
             className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white outline-none"
             onChange={(e) => setFormData({...formData, transportPoints: e.target.value})}
           >
-            <option value="0">Select Mode</option>
-            <option value="18">Walking / Cycling (18 pts)</option>
-            <option value="14">Public Transport (14 pts)</option>
-            <option value="10">Electric Vehicle (10 pts)</option>
-            <option value="6">Hybrid (6 pts)</option>
-            <option value="3">Petrol/Diesel Daily (3 pts)</option>
-            <option value="0">Heavy Car Dependency (0 pts)</option>
+            <option value="0" className="bg-zinc-900 text-white">Select Mode</option>
+            <option value="18" className="bg-zinc-900 text-white">Walking / Cycling (18 pts)</option>
+            <option value="14" className="bg-zinc-900 text-white">Public Transport (14 pts)</option>
+            <option value="10" className="bg-zinc-900 text-white">Electric Vehicle (10 pts)</option>
+            <option value="6" className="bg-zinc-900 text-white">Hybrid (6 pts)</option>
+            <option value="3" className="bg-zinc-900 text-white">Petrol/Diesel Daily (3 pts)</option>
+            <option value="0" className="bg-zinc-900 text-white">Heavy Car Dependency (0 pts)</option>
           </select>
         </div>
       </div>
@@ -93,9 +93,9 @@ export default function DataCollection({ onDataSubmit }) {
         <div className="p-4 rounded-2xl bg-white/5 space-y-3">
           <label className={labelStyle}><Recycle size={14}/> Waste</label>
           <select className="bg-transparent text-xs text-zinc-300 outline-none w-full" onChange={(e) => setFormData({...formData, wastePoints: e.target.value})}>
-            <option value="0">None</option>
-            <option value="8">Segregation Only</option>
-            <option value="12">Segregation + Compost</option>
+            <option value="0" className="bg-zinc-900 text-white">None</option>
+            <option value="8" className="bg-zinc-900 text-white">Segregation Only</option>
+            <option value="12" className="bg-zinc-900 text-white">Segregation + Compost</option>
           </select>
         </div>
 
@@ -103,9 +103,9 @@ export default function DataCollection({ onDataSubmit }) {
         <div className="p-4 rounded-2xl bg-white/5 space-y-3">
           <label className={labelStyle}><ShoppingBag size={14}/> Plastic Use</label>
           <select className="bg-transparent text-xs text-zinc-300 outline-none w-full" onChange={(e) => setFormData({...formData, plasticPoints: e.target.value})}>
-            <option value="0">Frequent</option>
-            <option value="6">Moderate</option>
-            <option value="12">Avoid Single-Use</option>
+            <option value="0" className="bg-zinc-900 text-white">Frequent</option>
+            <option value="6" className="bg-zinc-900 text-white">Moderate</option>
+            <option value="12" className="bg-zinc-900 text-white">Avoid Single-Use</option>
           </select>
         </div>
 
@@ -113,9 +113,9 @@ export default function DataCollection({ onDataSubmit }) {
         <div className="p-4 rounded-2xl bg-white/5 space-y-3">
           <label className={labelStyle}><Flame size={14}/> Cooking Fuel</label>
           <select className="bg-transparent text-xs text-zinc-300 outline-none w-full" onChange={(e) => setFormData({...formData, fuelPoints: e.target.value})}>
-            <option value="0">Inefficient</option>
-            <option value="4">Efficient LPG</option>
-            <option value="6">Induction / Biogas</option>
+            <option value="0" className="bg-zinc-900 text-white">Inefficient</option>
+            <option value="4" className="bg-zinc-900 text-white">Efficient LPG</option>
+            <option value="6" className="bg-zinc-900 text-white">Induction / Biogas</option>
           </select>
         </div>
 
@@ -123,9 +123,9 @@ export default function DataCollection({ onDataSubmit }) {
         <div className="p-4 rounded-2xl bg-white/5 space-y-3">
           <label className={labelStyle}><Leaf size={14}/> Purchasing</label>
           <select className="bg-transparent text-xs text-zinc-300 outline-none w-full" onChange={(e) => setFormData({...formData, purchasePoints: e.target.value})}>
-            <option value="0">Rarely Eco-friendly</option>
-            <option value="3">Sometimes</option>
-            <option value="5">Always Eco-friendly</option>
+            <option value="0" className="bg-zinc-900 text-white">Rarely Eco-friendly</option>
+            <option value="3" className="bg-zinc-900 text-white">Sometimes</option>
+            <option value="5" className="bg-zinc-900 text-white">Always Eco-friendly</option>
           </select>
         </div>
 
@@ -133,9 +133,9 @@ export default function DataCollection({ onDataSubmit }) {
         <div className="p-4 rounded-2xl bg-white/5 space-y-3">
           <label className={labelStyle}><Utensils size={14}/> Food Waste</label>
           <select className="bg-transparent text-xs text-zinc-300 outline-none w-full" onChange={(e) => setFormData({...formData, foodPoints: e.target.value})}>
-            <option value="0">High</option>
-            <option value="3">Moderate</option>
-            <option value="5">Minimal</option>
+            <option value="0" className="bg-zinc-900 text-white">High</option>
+            <option value="3" className="bg-zinc-900 text-white">Moderate</option>
+            <option value="5" className="bg-zinc-900 text-white">Minimal</option>
           </select>
         </div>
       </div>
