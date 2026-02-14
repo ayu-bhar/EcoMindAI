@@ -3,14 +3,14 @@
 import React from 'react';
 import { LayoutDashboard, FileText, Settings, LogOut, Leaf, Sparkles } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import Link from 'next/link';
 
 export default function Sidebar() {
-  const { logout } = useAuth();
+  const { logout, userData } = useAuth();
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Overview", active: true },
-    { icon: FileText, label: "My Plans", active: false },
+    // Only show "My Plans" if relevant, or keep it as placeholder
+    { icon: FileText, label: "Reports", active: false }, 
     { icon: Leaf, label: "Resources", active: false },
     { icon: Settings, label: "Settings", active: false },
   ];
@@ -24,6 +24,12 @@ export default function Sidebar() {
             <Leaf className="text-black w-6 h-6" />
           </div>
           <span className="text-xl font-bold tracking-tight text-white italic">EcoMind<span className="text-green-400 not-italic">AI</span></span>
+        </div>
+        
+        {/* User Role Badge */}
+        <div className="mt-4 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 inline-flex items-center gap-2">
+           <div className={`w-2 h-2 rounded-full ${userData?.role === 'leader' ? 'bg-purple-500' : 'bg-green-500'}`} />
+           <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">{userData?.role || 'User'}</span>
         </div>
       </div>
 
@@ -46,18 +52,6 @@ export default function Sidebar() {
           </button>
         ))}
       </nav>
-
-      {/* Upgrade/CTA Section - Premium Touch */}
-      <div className="px-6 mb-4">
-        <div className="p-4 rounded-2xl bg-gradient-to-br from-zinc-900 to-black border border-white/5 relative overflow-hidden group">
-          <Sparkles className="absolute -right-2 -top-2 w-12 h-12 text-green-500/10 group-hover:rotate-12 transition-transform" />
-          <p className="text-[10px] font-bold text-green-500 uppercase tracking-widest mb-1">Pro Access</p>
-          <p className="text-xs text-zinc-400 mb-3 leading-tight">Unlock advanced AI ecosystem modeling.</p>
-          <button className="w-full py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] font-bold rounded-lg border border-white/10 transition-colors">
-            Upgrade Now
-          </button>
-        </div>
-      </div>
 
       {/* Sign Out Button */}
       <div className="p-6 border-t border-white/5">
