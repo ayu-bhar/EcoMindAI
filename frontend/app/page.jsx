@@ -1,151 +1,126 @@
 'use client';
 
-import { useAuthForm } from '@/hooks/useAuthForm';
-import { 
-  Leaf, User, Calendar, Users, Loader2, Sparkles 
-} from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Leaf, Sparkles, Shield, BarChart3, ArrowRight, Globe } from 'lucide-react';
+import Link from 'next/link';
 
-export default function AuthPage() {
-  // Extract logic from the hook
-  const { 
-    isLogin, 
-    loading, 
-    formData, 
-    handleInputChange, 
-    toggleAuthMode, 
-    handleGoogleAuth 
-  } = useAuthForm();
-
-  // Visual classes
-  const inputClasses = "w-full bg-white/[0.03] border border-white/10 rounded-xl px-11 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-green-500/40 transition-all";
-  const iconClasses = "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500";
+export default function LandingPage() {
+  const features = [
+    {
+      icon: <Sparkles className="text-green-400" />,
+      title: "AI Ecosystem Modeling",
+      desc: "Our neural networks simulate thousands of environmental variables to find your optimal path."
+    },
+    {
+      icon: <BarChart3 className="text-cyan-400" />,
+      title: "Real-time Impact Tracking",
+      desc: "Monitor carbon offsets and water conservation metrics with aerospace precision."
+    },
+    {
+      icon: <Shield className="text-emerald-400" />,
+      title: "Policy Compliance",
+      desc: "Automatically align your community strategies with global sustainability standards."
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
-      <div className="flex w-full max-w-5xl min-h-[600px] mx-auto backdrop-blur-xl bg-white/[0.01] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl relative">
-        
-        {/* --- Left Side: Visuals --- */}
-        <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-green-900/40 to-black p-12 flex-col justify-between relative border-r border-white/5">
-          <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] pointer-events-none" />
-          
-          <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.3)]">
-                <Leaf className="text-black w-6 h-6" />
+    <div className="min-h-screen bg-[#080e0d] text-white overflow-hidden selection:bg-green-500/30">
+      {/* Background Orbs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* Navigation */}
+      <nav className="relative z-50 flex justify-between items-center px-8 py-6 max-w-7xl mx-auto">
+        <div className="flex items-center gap-2 font-bold text-2xl italic tracking-tighter">
+          <div className="bg-green-500 p-1.5 rounded-lg text-black">
+            <Leaf size={20} fill="currentColor" />
+          </div>
+          <span>EcoMind<span className="text-green-400 not-italic">AI</span></span>
+        </div>
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+          <Link href="#features" className="hover:text-white transition-colors">Technology</Link>
+          <Link href="#solutions" className="hover:text-white transition-colors">Solutions</Link>
+          <Link href="/login" className="px-5 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-white">
+            Login
+          </Link>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative z-10 pt-20 pb-32 px-8 max-w-7xl mx-auto text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold uppercase tracking-[0.2em] mb-8">
+            <Globe size={14} className="animate-spin-slow" /> Engineering a Greener Future
+          </div>
+          <h1 className="text-6xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter">
+            INTELLIGENT <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-500 to-cyan-400">
+              SUSTAINABILITY
+            </span>
+          </h1>
+          <p className="max-w-2xl mx-auto text-zinc-400 text-lg md:text-xl mb-12 font-light leading-relaxed">
+            The world's first AI-driven ecosystem management platform. 
+            Transform community data into actionable climate strategies in seconds.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link href="/dashboard" className="w-full sm:w-auto px-10 py-5 bg-green-500 hover:bg-green-400 text-black font-black rounded-2xl transition-all shadow-[0_20px_50px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 group">
+              Start Analysis <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <button className="w-full sm:w-auto px-10 py-5 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 transition-all">
+              View Case Studies
+            </button>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Features Grid */}
+      <section id="features" className="relative z-10 py-24 px-8 max-w-7xl mx-auto border-t border-white/5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {features.map((f, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.2 }}
+              className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                {f.icon}
               </div>
-              <span className="text-xl font-bold tracking-tight text-white">EcoMindAI</span>
-            </div>
-            
-            <h2 className="text-5xl font-bold text-white leading-[1.1]">
-              Smarter Plans <br />
-              For A <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Greener Earth.</span>
-            </h2>
-            
-            <p className="mt-6 text-zinc-400 font-light max-w-sm leading-relaxed text-lg">
-              AI-driven sustainability planning for communities, tailored to your local resources.
-            </p>
-          </div>
-
-          <div className="relative z-10 bg-white/[0.03] border border-white/10 p-6 rounded-2xl backdrop-blur-md">
-            <Sparkles className="text-green-400 w-5 h-5 mb-3" />
-            <p className="text-sm text-zinc-300 italic mb-3">
-              "We decreased our community carbon footprint by 22% in the first quarter using EcoMindAI."
-            </p>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">— Riverdale Green Council</span>
-            </div>
-          </div>
-        </div>
-
-        {/* --- Right Side: Form --- */}
-        <div className="w-full lg:w-1/2 p-8 md:p-16 flex flex-col justify-center bg-[#080e0d]">
-          <div className="max-w-sm mx-auto w-full">
-            <div className="mb-8">
-              <h3 className="text-3xl font-bold text-white mb-2">
-                {isLogin ? 'Welcome Back' : 'Join the Mission'}
-              </h3>
-              <p className="text-zinc-500 text-sm">
-                {isLogin 
-                  ? 'Sign in to access your community dashboard.' 
-                  : 'Fill in your details to generate your first plan.'}
+              <h3 className="text-xl font-bold mb-4">{f.title}</h3>
+              <p className="text-zinc-500 leading-relaxed text-sm">
+                {f.desc}
               </p>
-            </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-              
-              {/* Render Inputs ONLY if Signing Up */}
-              {!isLogin && (
-                <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                  <div className="relative group">
-                    <User className={iconClasses} />
-                    <input 
-                      type="text" 
-                      placeholder="Full Name" 
-                      className={inputClasses}
-                      value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                    />
-                  </div>
-
-                  <div className="relative group">
-                    <Calendar className={iconClasses} />
-                    <input 
-                      type="number" 
-                      placeholder="Age" 
-                      className={inputClasses}
-                      value={formData.age}
-                      onChange={(e) => handleInputChange('age', e.target.value)}
-                    />
-                  </div>
-
-                  <div className="relative group">
-                    <Users className={iconClasses} />
-                    <select 
-                      className={`${inputClasses} appearance-none cursor-pointer`}
-                      value={formData.role}
-                      onChange={(e) => handleInputChange('role', e.target.value)}
-                    >
-                      <option value="citizen" className="bg-zinc-900">I am a Resident/Citizen</option>
-                      <option value="leader" className="bg-zinc-900">I am a Community Leader</option>
-                      <option value="researcher" className="bg-zinc-900">I am a Researcher</option>
-                    </select>
-                  </div>
+      {/* Visual Teaser */}
+      <section className="py-24 px-8 max-w-5xl mx-auto text-center relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-green-500/20 blur-[150px] -z-10 rounded-full" />
+        <div className="backdrop-blur-3xl bg-black/40 border border-white/10 rounded-[3rem] p-4 shadow-2xl overflow-hidden">
+             {/* Replace this with an actual dashboard screenshot or a mock SVG mockup */}
+             <div className="aspect-video bg-zinc-900/50 rounded-[2rem] border border-white/5 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080e0d] to-transparent opacity-60" />
+                <div className="p-8 text-center relative z-10">
+                    <Sparkles className="mx-auto mb-4 text-green-500" size={48} />
+                    <p className="text-zinc-400 font-mono text-xs tracking-widest uppercase">System Interface Preview</p>
                 </div>
-              )}
-
-              {/* Google Button */}
-              <button 
-                onClick={handleGoogleAuth}
-                disabled={loading}
-                className="w-full py-4 bg-white hover:bg-zinc-200 text-black font-bold rounded-xl shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <img 
-                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
-                    alt="Google" 
-                    className="w-5 h-5" 
-                  />
-                )}
-                {isLogin ? 'Sign in with Google' : 'Sign up with Google'}
-              </button>
-            </form>
-
-            <div className="mt-8 text-center">
-              <p className="text-sm text-zinc-500">
-                {isLogin ? "New to EcoMind?" : "Already have an account?"}{' '}
-                <button 
-                  onClick={toggleAuthMode}
-                  className="text-green-500 font-bold hover:text-green-400 hover:underline underline-offset-4 transition-all ml-1"
-                >
-                  {isLogin ? 'Create Account' : 'Log In'}
-                </button>
-              </p>
-            </div>
-          </div>
+             </div>
         </div>
-      </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 border-t border-white/5 text-center text-zinc-600 text-xs tracking-widest uppercase font-bold">
+        © 2024 EcoMindAI Systems • Built for the Planet
+      </footer>
     </div>
   );
 }

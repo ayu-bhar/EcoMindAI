@@ -6,8 +6,10 @@ import StatCard from '@/components/dashboard/StatCard';
 import ActionPlanDisplay from '@/components/ActionPlanDisplay'; // Import your display component
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { PlusCircle, Loader2, Sparkles, LayoutDashboard, ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
+  const router = useRouter();
   const { loading, stats, plans, user } = useDashboardData();
   
   // 1. ADD STATE: Tracks which plan is currently being viewed
@@ -69,7 +71,7 @@ export default function Dashboard() {
                 </div>
                 
                 <button className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-5 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-green-500/10 group">
-                  <PlusCircle size={18} className="group-hover:rotate-90 transition-transform" />
+                  <PlusCircle size={18} className="group-hover:rotate-90 transition-transform" onClick={() => router.push('/form')}/>
                   New Analysis
                 </button>
               </header>
