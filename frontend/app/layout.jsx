@@ -1,6 +1,13 @@
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext"; // Import the Auth Context
 import "./globals.css";
+import { Ephesis } from 'next/font/google';
+
+const ephesis = Ephesis({ 
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-cursive',
+});
 
 // Configure the font
 const inter = Inter({ subsets: ["latin"] });
