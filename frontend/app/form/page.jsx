@@ -73,7 +73,7 @@ export default function Home() {
   // Simulate API delay
   setTimeout(() => {
     const mockData = { /* Paste the JSON above here */ };
-    setActionPlan(mockData);
+    setActionPlan(response);
     setCurrentView('results');
   }, 5000); // 5 seconds to appreciate the loading animations
   };

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MapPin, Users, Building2, Droplets, Zap, Trash2, ArrowRight, Leaf, ChevronLeft } from 'lucide-react';
+import { MapPin, Users, Building2, Droplets, Zap, Trash2, ArrowRight, Leaf, ChevronLeft, Target, CheckCircle } from 'lucide-react';
 
 export default function DataCollectionForm({ onSubmit }) {
   const [step, setStep] = useState(1);
@@ -201,8 +201,98 @@ export default function DataCollectionForm({ onSubmit }) {
             </div>
           )}
 
-          {/* ... Step 3 and 4 follow similar pattern ... */}
-          {/* (I've styled Step 1 and 2 in detail above to show the pattern) */}
+          {/* Step 3: Infrastructure Assessment */}
+{step === 3 && (
+  <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+    <div className="flex items-center gap-4 mb-8">
+      <div className="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
+        <MapPin className="w-6 h-6 text-indigo-400" />
+      </div>
+      <h3 className="text-2xl font-bold text-white">Infrastructure Assessment</h3>
+    </div>
+
+    <div className="space-y-8">
+      {/* Custom Button Toggles for Infrastructure */}
+      {[
+        { id: 'publicTransport', label: 'Public Transit Access', options: ['None', 'Limited', 'Moderate', 'Extensive'] },
+        { id: 'renewableEnergyAccess', label: 'Renewable Infrastructure', options: ['None', 'Planning', 'Partial', 'Widespread'] },
+        { id: 'recyclingFacilities', label: 'Recycling Facilities', options: ['None', 'Few', 'Adequate', 'Abundant'] }
+      ].map((field) => (
+        <div key={field.id}>
+          <label className={labelClasses}>{field.label} *</label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {field.options.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => handleChange(field.id, opt.toLowerCase())}
+                className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                  formData[field.id] === opt.toLowerCase()
+                    ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300'
+                    : 'bg-white/5 border-white/5 text-zinc-500 hover:bg-white/10'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+{/* Step 4: Environmental Priorities */}
+{step === 4 && (
+  <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+    <div className="flex items-center gap-4 mb-8">
+      <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+        <Target className="w-6 h-6 text-emerald-400" />
+      </div>
+      <h3 className="text-2xl font-bold text-white">Environmental Priorities</h3>
+    </div>
+
+    <div className="form-group">
+      <label className={labelClasses}>
+        Select your top environmental goals * (Choose at least one)
+      </label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+        {[
+          'Reduce Carbon Emissions',
+          'Water Conservation',
+          'Waste Reduction',
+          'Renewable Energy Adoption',
+          'Biodiversity Protection',
+          'Air Quality Improvement',
+          'Sustainable Transportation',
+          'Green Spaces'
+        ].map((priority) => (
+          <button
+            key={priority}
+            type="button"
+            onClick={() => handleCheckboxChange('priorities', priority)}
+            className={`flex items-center justify-between px-4 py-4 rounded-2xl border transition-all group ${
+              formData.priorities.includes(priority)
+                ? 'bg-green-500/20 border-green-500 text-green-300 shadow-[0_0_20px_rgba(34,197,94,0.1)]'
+                : 'bg-white/[0.02] border-white/5 text-zinc-400 hover:border-white/20'
+            }`}
+          >
+            <span className="text-sm font-medium">{priority}</span>
+            <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
+              formData.priorities.includes(priority)
+                ? 'bg-green-500 border-green-500'
+                : 'border-zinc-700'
+            }`}>
+              {formData.priorities.includes(priority) && (
+                <CheckCircle className="w-3 h-3 text-black" strokeWidth={3} />
+              )}
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
 
           {/* Navigation Buttons */}
           <div className="flex items-center justify-between mt-12 pt-8 border-t border-white/5">
