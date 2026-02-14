@@ -1,4 +1,37 @@
 'use client';
+const response ={
+  "summary": "Emerald Valley is well-positioned to become a regional leader in sustainability. By leveraging your moderate population density and existing partial renewable infrastructure, this plan focuses on 'closing the loop' in waste management and optimizing public transit to reduce carbon-heavy commuting by 35% over the next two years.",
+  "actionItems": [
+    {
+      "name": "Community Micro-Grid Expansion",
+      "description": "Install additional solar arrays on municipal buildings to create a resilient energy buffer during peak hours.",
+      "timeline": "8 - 12 Months",
+      "cost": "$250k - $400k",
+      "impact": "High (Energy Independence)"
+    },
+    {
+      "name": "Smart-Sensor Waste Program",
+      "description": "Deploy IoT sensors in public waste bins to optimize collection routes, reducing fuel consumption of municipal trucks.",
+      "timeline": "3 - 5 Months",
+      "cost": "$45k - $60k",
+      "impact": "Medium (Operational Efficiency)"
+    },
+    {
+      "name": "Native Reforestation Corridor",
+      "description": "Establish a 5-mile green belt using native oak and maple species to improve air quality and local biodiversity.",
+      "timeline": "24 Months (Ongoing)",
+      "cost": "$15k - $30k",
+      "impact": "High (Ecosystem Health)"
+    }
+  ],
+  "expectedOutcomes": [
+    "35% reduction in municipal grid dependence",
+    "Estimated 120 tons of CO2 offset annually",
+    "Significant increase in local pollinator populations",
+    "Lowered maintenance costs for waste management"
+  ],
+  "resourceRequirements": "Requires partnership with local utility providers for grid-tie-ins, a volunteer core of 50 residents for planting days, and an initial grant for IoT sensor procurement."
+}
 
 import { useState } from 'react';
 import DataCollectionForm from '@/components/DataCollectionForm';
@@ -11,27 +44,38 @@ export default function Home() {
   const [communityData, setCommunityData] = useState(null);
   const [actionPlan, setActionPlan] = useState(null);
 
+  // const handleFormSubmit = async (data) => {
+  //   setCommunityData(data);
+  //   setCurrentView('loading');
+
+  //   try {
+  //     const response = await fetch('http://localhost:5000/api/plans/generate', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify(data),
+  //     });
+
+  //     if (!response.ok) throw new Error('Failed to generate action plan');
+
+  //     const result = await response.json();
+  //     setActionPlan(result);
+  //     setCurrentView('results');
+  //   } catch (error) {
+  //     console.error('Error generating action plan:', error);
+  //     alert('Failed to generate action plan. Please ensure the backend server is running.');
+  //     setCurrentView('form');
+  //   }
+  // };
   const handleFormSubmit = async (data) => {
-    setCommunityData(data);
-    setCurrentView('loading');
+  setCommunityData(data);
+  setCurrentView('loading');
 
-    try {
-      const response = await fetch('http://localhost:5000/api/plans/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) throw new Error('Failed to generate action plan');
-
-      const result = await response.json();
-      setActionPlan(result);
-      setCurrentView('results');
-    } catch (error) {
-      console.error('Error generating action plan:', error);
-      alert('Failed to generate action plan. Please ensure the backend server is running.');
-      setCurrentView('form');
-    }
+  // Simulate API delay
+  setTimeout(() => {
+    const mockData = { /* Paste the JSON above here */ };
+    setActionPlan(mockData);
+    setCurrentView('results');
+  }, 5000); // 5 seconds to appreciate the loading animations
   };
 
   const handleStartOver = () => {
