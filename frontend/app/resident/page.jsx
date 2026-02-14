@@ -2,149 +2,148 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  RotateCcw, 
-  LayoutDashboard, 
-  Sparkles 
-} from 'lucide-react';
+import { RotateCcw, LayoutDashboard, Sparkles } from 'lucide-react';
 
 import SustainabilityScore from '@/components/resident/SustainabilityScore';
 import ActionTips from '@/components/resident/ActionTips';
 import DataCollection from '@/components/resident/DataCollection';
 
-// 1. Define the Testing Data (Mock Response)
 const MOCK_ANALYSIS = {
-  sustainabilityScore: 78,
-  summary: "Your household is a 'High Potential Conserver'. While water usage is efficient, energy peaks suggest phantom loads during night hours.",
+  sustainabilityScore: 72,
+  summary: "Initial assessment based on community averages. Please recalibrate with your specific household data.",
   actionItems: [
     {
-      name: "Vampire Power Mitigation",
-      description: "Install smart power strips to eliminate phantom energy loads from your home office.",
-      timeline: "Immediate",
-      cost: "$30 - $50",
-      impact: "Medium (Save $12/mo)",
+      name: "Update Your Profile",
+      description: "Complete your first audit to see personalized impact tips.",
+      timeline: "5 Minutes",
+      cost: "$0",
+      impact: "High",
       type: "energy"
-    },
-    {
-      name: "Enhanced Recycling Sorting",
-      description: "Transition to a three-bin system to increase diversion rate from 40% to 75%.",
-      timeline: "1 Week",
-      cost: "$20 - $40",
-      impact: "High (Waste Reduction)",
-      type: "waste"
     }
   ]
 };
+const calculateResidentScore = (data) => {
+  let s = 0;
+  // Household normalization
+  const perPersonElec = Number(data.electricity) / (Number(data.householdSize) || 1);
+  const perPersonWater = (Number(data.water) / (Number(data.householdSize) || 1)) / 30;
+
+  // 1. Electricity (18 pts)
+  if (perPersonElec < 90) s += 18;
+  else if (perPersonElec <= 150) s += 12;
+  else if (perPersonElec <= 250) s += 6;
+
+  // 2. Renewable (12 pts)
+  const ren = Number(data.renewable);
+  if (ren >= 70) s += 12;
+  else if (ren >= 30) s += 8;
+  else if (ren >= 1) s += 3;
+
+  // 3. Water (12 pts)
+  if (perPersonWater < 120) s += 12;
+  else if (perPersonWater <= 180) s += 8;
+  else if (perPersonWater <= 250) s += 4;
+
+  // 4-9. Direct Point Categories
+  s += (Number(data.wastePoints) || 0);
+  s += (Number(data.fuelPoints) || 0);
+  s += (Number(data.transportPoints) || 0);
+  s += (Number(data.plasticPoints) || 0);
+  s += (Number(data.purchasePoints) || 0);
+  s += (Number(data.foodPoints) || 0);
+
+  return Math.min(100, s);
+};
 
 export default function ResidentPortal() {
-  // 2. Initialize with the Mock Data instead of null
   const [analysisResult, setAnalysisResult] = useState(MOCK_ANALYSIS);
   const [showForm, setShowForm] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleDataSubmit = async (formData) => {
-    setIsProcessing(true);
-    // Simulate AI update
-    setTimeout(() => {
-      // In a real app, the score would change based on formData
-      setAnalysisResult({
-        ...MOCK_ANALYSIS,
-        sustainabilityScore: Math.min(100, Math.floor((formData.waste / 2) + 50))
-      });
-      setShowForm(false);
-      setIsProcessing(false);
-    }, 1500);
+  // 100-Point Rubric Logic
+  const calculateScore = (data) => {
+    let s = 0;
+    const perPersonElec = Number(data.electricity) / (Number(data.householdSize) || 1);
+    const perPersonWater = Number(data.water) / (Number(data.householdSize) || 1) / 30; // monthly to daily
+
+    // 1. Electricity (18)
+    if (perPersonElec < 90) s += 18;
+    else if (perPersonElec <= 150) s += 12;
+    else if (perPersonElec <= 250) s += 6;
+
+    // 2. Renewable (12)
+    const ren = Number(data.renewable);
+    if (ren >= 70) s += 12;
+    else if (ren >= 30) s += 8;
+    else if (ren >= 1) s += 3;
+
+    // 3. Water (12)
+    if (perPersonWater < 120) s += 12;
+    else if (perPersonWater <= 180) s += 8;
+    else if (perPersonWater <= 250) s += 4;
+
+    // 4. Waste (12), 5. Fuel (6), 6. Transport (18), 7. Plastic (12), 8. Purchase (5), 9. Food (5)
+    // Values are passed as points from the form selections
+    s += (Number(data.wastePoints) || 0);
+    s += (Number(data.fuelPoints) || 0);
+    s += (Number(data.transportPoints) || 0);
+    s += (Number(data.plasticPoints) || 0);
+    s += (Number(data.purchasePoints) || 0);
+    s += (Number(data.foodPoints) || 0);
+
+    return Math.min(100, s);
   };
+
+  const handleDataSubmit = async (formData) => {
+  setIsProcessing(true);
+
+  // 1. Calculate Score in Frontend ONLY (as requested)
+  const localScore = calculateResidentScore(formData); 
+  
+  // 2. Fetch AI-driven text analysis
+  // const aiResult = await fetchAIAnalysis(formData);
+
+  setTimeout(() => {
+    setAnalysisResult({
+      sustainabilityScore: localScore, // Use the frontend calculation
+      summary: "AI Summary goes here...", // From AI response
+      actionItems: [ /* From AI response */ ]
+    });
+    setShowForm(false);
+    setIsProcessing(false);
+  }, 1500);
+};
 
   return (
     <div className="min-h-screen bg-[#080e0d] text-zinc-300">
-      <main className="container mx-auto px-6 py-12 lg:py-20">
+      <main className="container mx-auto px-6 py-12">
         <AnimatePresence mode="wait">
-          
-          {/* SHOW ANALYSIS (First View) */}
           {!showForm ? (
-            <motion.div 
-              key="dashboard"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="space-y-12"
-            >
-              <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+            <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <header className="flex justify-between items-end mb-12">
                 <div>
-                  <div className="flex items-center gap-2 text-green-500 mb-2">
-                    <LayoutDashboard size={18} />
-                    <span className="text-[10px] font-bold uppercase tracking-[0.3em]">Analysis Active</span>
-                  </div>
-                  <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase italic">
-                    Resident <span className="text-zinc-600">Impact</span>
-                  </h1>
+                  <h1 className="text-4xl font-black text-white uppercase italic">Resident Impact</h1>
                 </div>
-                
-                {/* CALIBRATE BUTTON: Switches to Form */}
-                <button 
-                  onClick={() => setShowForm(true)}
-                  className="group flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 transition-all text-xs font-bold uppercase tracking-widest"
-                >
-                  <RotateCcw size={14} className="group-hover:rotate-[-120deg] transition-transform" />
-                  Recalibrate Data
+                <button onClick={() => setShowForm(true)} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-xs font-bold uppercase">
+                  <RotateCcw size={14} /> Recalibrate Data
                 </button>
               </header>
 
-              {/* Summary Box */}
-              <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-500/10 to-transparent border border-emerald-500/20">
-                <h3 className="text-emerald-400 font-black uppercase text-xs tracking-[0.2em] mb-3 flex items-center gap-2">
-                  <Sparkles size={14} /> AI Analysis Summary
-                </h3>
-                <p className="text-white text-lg font-medium leading-relaxed tracking-tight">
-                  "{analysisResult.summary}"
-                </p>
-              </div>
-
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <section className="lg:col-span-5 flex flex-col items-center justify-center p-12 bg-white/[0.02] border border-white/10 rounded-[3rem]">
+                <section className="lg:col-span-5 flex flex-col items-center p-12 bg-white/[0.02] border border-white/10 rounded-[3rem]">
+                  {/* Fixed Reference: using analysisResult.sustainabilityScore */}
                   <SustainabilityScore score={analysisResult.sustainabilityScore} />
                 </section>
-
                 <section className="lg:col-span-7">
                   <ActionTips data={analysisResult} />
                 </section>
               </div>
             </motion.div>
           ) : (
-            
-            /* SHOW FORM (On Clicking Recalibrate) */
-            <motion.div 
-              key="audit"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center min-h-[60vh]"
-            >
-              <div className="text-center mb-10">
-                <h1 className="text-3xl font-black text-white uppercase italic tracking-tighter">Update Usage Data</h1>
-                <p className="text-zinc-500">Recalibrate your score with new monthly metrics</p>
-              </div>
-
-              {isProcessing ? (
-                <div className="py-20 text-center">
-                  <div className="w-12 h-12 border-4 border-green-500/20 border-t-green-500 rounded-full animate-spin mx-auto mb-4" />
-                  <p className="text-xs font-mono uppercase tracking-widest text-zinc-500">Processing...</p>
-                </div>
-              ) : (
-                <>
-                  <DataCollection onDataSubmit={handleDataSubmit} />
-                  <button 
-                    onClick={() => setShowForm(false)}
-                    className="mt-6 text-zinc-600 hover:text-white text-xs font-bold uppercase tracking-widest"
-                  >
-                    Cancel Update
-                  </button>
-                </>
-              )}
+            <motion.div key="audit" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <DataCollection onDataSubmit={handleDataSubmit} />
             </motion.div>
           )}
-
         </AnimatePresence>
       </main>
     </div>
