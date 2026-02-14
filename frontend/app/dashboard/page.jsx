@@ -70,8 +70,16 @@ export default function Dashboard() {
                   <p className="text-zinc-500 text-sm">Welcome back, <span className="text-zinc-300 font-medium">{user?.name}</span></p>
                 </div>
                 
-                <button className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-5 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-green-500/10 group">
-                  <PlusCircle size={18} className="group-hover:rotate-90 transition-transform" onClick={() => router.push('/form')}/>
+                <button className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-5 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-green-500/10 group"
+                onClick={()=>{
+                    
+                    console.log('Routing clicked')
+                    router.push('/form')
+                  }
+                  }>
+                  <PlusCircle size={18} className="group-hover:rotate-90 transition-transform" 
+                  
+                  />
                   New Analysis
                 </button>
               </header>
