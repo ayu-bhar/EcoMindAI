@@ -1,8 +1,25 @@
 @import "tailwindcss";
+/* Add this to your CSS */
+/* In your globals.css */
+.pdf-safe-mode {
+  background-color: #080e0d !important;
+}
 
+.pdf-safe-mode * {
+  /* This tells the browser: "If you're in safe mode, 
+     use the closest fallback for colors." */
+  color-interpolation: sRGB; 
+}
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
 }
 
 @theme inline {
