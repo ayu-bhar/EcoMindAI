@@ -3,10 +3,33 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RotateCcw, LayoutDashboard, Sparkles } from 'lucide-react';
-
+import { db } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import SustainabilityScore from '@/components/resident/SustainabilityScore';
 import ActionTips from '@/components/resident/ActionTips';
 import DataCollection from '@/components/resident/DataCollection';
+const MOCK_AI_DATA = {
+  summary: "Your primary strength lies in your commute (18/18 for transport), but your waste management and plastic habits are currently your largest areas for improvement.",
+  actionPlan: [
+    {
+      name: "Zero-Waste Transition",
+      description: "Moving from basic segregation (8 pts) to composting (12 pts) will significantly boost your waste score.",
+      timeline: "2 Weeks",
+      cost: "$20 (Compost Bin)",
+      impact: "High",
+      type: "waste"
+    },
+    {
+      name: "Plastic Usage Audit",
+      description: "By swapping single-use bottles for a high-quality filter, you can move your Plastic Usage from Moderate to Eco-Leader status.",
+      timeline: "Immediate",
+      cost: "$30",
+      impact: "Medium",
+      type: "waste"
+    }
+  ],
+  resourceRequirements: "Requires a local composting guide and a one-time investment in reusable containers."
+};
 
 const MOCK_ANALYSIS = {
   sustainabilityScore: 72,
@@ -97,21 +120,52 @@ export default function ResidentPortal() {
   const handleDataSubmit = async (formData) => {
   setIsProcessing(true);
 
-  // 1. Calculate Score in Frontend ONLY (as requested)
-  const localScore = calculateResidentScore(formData); 
-  
-  // 2. Fetch AI-driven text analysis
-  // const aiResult = await fetchAIAnalysis(formData);
+  // 1. Calculate Score in Frontend ONLY
+  const finalLocalScore = calculateResidentScore(formData);
 
-  setTimeout(() => {
+  // 2. Prepare the Firebase Payload
+  const auditPayload = {
+    metadata: {
+      timestamp: serverTimestamp(),
+      householdSize: Number(formData.householdSize) //
+    },
+    metrics: {
+      electricity: Number(formData.electricity), //
+      water: Number(formData.water), //
+      renewable: Number(formData.renewable), //
+      transportPoints: Number(formData.transportPoints), //
+      wastePoints: Number(formData.wastePoints), //
+      plasticPoints: Number(formData.plasticPoints), //
+      fuelPoints: Number(formData.fuelPoints), //
+      purchasePoints: Number(formData.purchasePoints), //
+      foodPoints: Number(formData.foodPoints) //
+    },
+    results: {
+      localScore: finalLocalScore, // The requested frontend-calculated score
+      aiSummary: MOCK_AI_DATA.summary,
+      actionPlan: MOCK_AI_DATA.actionPlan,
+      resourceRequirements: MOCK_AI_DATA.resourceRequirements
+    }
+  };
+
+  try {
+    // 3. Save to Firebase
+    const docRef = await addDoc(collection(db, "resident_audits"), auditPayload);
+    console.log("Audit saved with ID: ", docRef.id);
+
+    // 4. Update UI state to show the results dashboard
     setAnalysisResult({
-      sustainabilityScore: localScore, // Use the frontend calculation
-      summary: "AI Summary goes here...", // From AI response
-      actionItems: [ /* From AI response */ ]
+      sustainabilityScore: finalLocalScore,
+      ...MOCK_AI_DATA
     });
+    
     setShowForm(false);
+  } catch (error) {
+    console.error("Error saving to Firebase:", error);
+    alert("Failed to save audit. Check console for details.");
+  } finally {
     setIsProcessing(false);
-  }, 1500);
+  }
 };
 
   return (
