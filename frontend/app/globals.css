@@ -1,14 +1,14 @@
 @import "tailwindcss";
 /* Add this to your CSS */
+/* In your globals.css */
 .pdf-safe-mode {
-  /* Manually override oklch/oklab variables with HEX */
-  --tw-bg-opacity: 1;
-  background-color: #080e0d !important; 
-  color: #ffffff !important;
+  background-color: #080e0d !important;
 }
 
-.pdf-safe-mode .text-green-400 {
-  color: #4ade80 !important; /* Standard HEX for Green 400 */
+.pdf-safe-mode * {
+  /* This tells the browser: "If you're in safe mode, 
+     use the closest fallback for colors." */
+  color-interpolation: sRGB; 
 }
 :root {
   --background: #ffffff;
