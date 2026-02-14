@@ -1,24 +1,27 @@
 'use client';
 
 import React from 'react';
+import { useAuth } from '@/context/AuthContext'; // Import Auth Context
 import { motion } from 'framer-motion';
-import { Leaf, Sparkles, Shield, BarChart3, ArrowRight, Globe } from 'lucide-react';
+import { Leaf, Sparkles, Shield, BarChart3, ArrowRight, Globe, LogOut } from 'lucide-react';
 import Link from 'next/link';
 
 export default function LandingPage() {
+  const { user, logout } = useAuth(); // Get user status and logout function
+
   const features = [
     {
-      icon: <Sparkles className="text-green-400" />,
+      icon: <Sparkles className="text-green-400" size={24} />,
       title: "AI Ecosystem Modeling",
       desc: "Our neural networks simulate thousands of environmental variables to find your optimal path."
     },
     {
-      icon: <BarChart3 className="text-cyan-400" />,
+      icon: <BarChart3 className="text-cyan-400" size={24} />,
       title: "Real-time Impact Tracking",
       desc: "Monitor carbon offsets and water conservation metrics with aerospace precision."
     },
     {
-      icon: <Shield className="text-emerald-400" />,
+      icon: <Shield className="text-emerald-400" size={24} />,
       title: "Policy Compliance",
       desc: "Automatically align your community strategies with global sustainability standards."
     }
@@ -32,18 +35,39 @@ export default function LandingPage() {
 
       {/* Navigation */}
       <nav className="relative z-50 flex justify-between items-center px-8 py-6 max-w-7xl mx-auto">
-        <div className="flex items-center gap-2 font-bold text-2xl italic tracking-tighter">
+        <div className="flex items-center gap-2 font-bold text-2xl italic tracking-tighter cursor-pointer">
           <div className="bg-green-500 p-1.5 rounded-lg text-black">
             <Leaf size={20} fill="currentColor" />
           </div>
           <span>EcoMind<span className="text-green-400 not-italic">AI</span></span>
         </div>
+        
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
           <Link href="#features" className="hover:text-white transition-colors">Technology</Link>
           <Link href="#solutions" className="hover:text-white transition-colors">Solutions</Link>
-          <Link href="/login" className="px-5 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-white">
-            Login
-          </Link>
+          
+          {/* CONDITIONAL RENDERING: Check if user exists */}
+          {user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-xs text-green-400 border border-green-500/20 px-3 py-1 rounded-full bg-green-500/10">
+                {user.displayName || 'Authorized User'}
+              </span>
+              <button 
+                onClick={logout}
+                className="flex items-center gap-2 px-5 py-2 rounded-xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 text-red-400 transition-all"
+              >
+                <LogOut size={14} />
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link 
+              href="/login" 
+              className="px-5 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-white"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </nav>
 
@@ -68,7 +92,10 @@ export default function LandingPage() {
             Transform community data into actionable climate strategies in seconds.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/dashboard" className="w-full sm:w-auto px-10 py-5 bg-green-500 hover:bg-green-400 text-black font-black rounded-2xl transition-all shadow-[0_20px_50px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 group">
+            <Link 
+              href={user ? "/dashboard" : "/login"} 
+              className="w-full sm:w-auto px-10 py-5 bg-green-500 hover:bg-green-400 text-black font-black rounded-2xl transition-all shadow-[0_20px_50px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 group"
+            >
               Start Analysis <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <button className="w-full sm:w-auto px-10 py-5 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 transition-all">
@@ -106,7 +133,6 @@ export default function LandingPage() {
       <section className="py-24 px-8 max-w-5xl mx-auto text-center relative">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-green-500/20 blur-[150px] -z-10 rounded-full" />
         <div className="backdrop-blur-3xl bg-black/40 border border-white/10 rounded-[3rem] p-4 shadow-2xl overflow-hidden">
-             {/* Replace this with an actual dashboard screenshot or a mock SVG mockup */}
              <div className="aspect-video bg-zinc-900/50 rounded-[2rem] border border-white/5 flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-[#080e0d] to-transparent opacity-60" />
                 <div className="p-8 text-center relative z-10">
@@ -119,7 +145,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="py-12 border-t border-white/5 text-center text-zinc-600 text-xs tracking-widest uppercase font-bold">
-        © 2024 EcoMindAI Systems • Built for the Planet
+        © 2026 EcoMindAI Systems • Built for the Planet
       </footer>
     </div>
   );
